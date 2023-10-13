@@ -1,7 +1,6 @@
 
 
 export class TaskModel {
-    // id: number;
     id: string;
     description: string;
     developer: string;
@@ -40,6 +39,20 @@ export class StateModel {
         this.key = '';
         this.action = '';
         this.value = new TaskModel();
+    }    
+}
 
+export class User {
+    email: string;
+    password: string;
+    constructor(){
+        this.email = 'ciro@gmail.com';
+        this.password = '123';
+    }
+}
+export class Token {
+    token: string;
+    constructor(){
+        this.token = '';
     }
 }

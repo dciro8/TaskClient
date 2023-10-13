@@ -18,7 +18,7 @@ export class stateService {
     }
 
     setData(obj: StateModel): void {
-debugger;
+
         if (obj.action == ActionsEnum.INSERT) {
             obj.key = this.generateUuid();
             this.data = [...this.data, obj];
@@ -32,7 +32,6 @@ debugger;
     }
 
     getData({ key }: StateModel): StateModel {
-        debugger;
         const element = this.data.find(f => f.key == key);
 
         if (element)
@@ -41,9 +40,7 @@ debugger;
         return new StateModel();
     }
 
-
     deleteData({ key }: StateModel): void {
-        debugger;
         this.data = this.data.filter(f => f.key !== key);
 
         localStorage.setItem('data', JSON.stringify(this.data));

@@ -3,7 +3,7 @@ import { MessageService, ConfirmEventType, ConfirmationService } from 'primeng/a
 import { Table } from 'primeng/table';
 import { RequestResultModel } from 'src/app/models/RequestResultModel';
 import { ResponseModelTask } from 'src/app/models/ResponseModel';
-import { StateModel, TaskModel } from 'src/app/models/TaskModel';
+import { StateModel, TaskModel, Token, User } from 'src/app/models/TaskModel';
 import { taskService } from 'src/app/services/taskService';
 import { stateService } from 'src/app/services/stateService';
 import { ActionsEnum } from 'src/app/models/EnumActions';
@@ -19,39 +19,40 @@ export class TaskListComponent implements OnInit {
   openDialog: boolean = false;
   isEditTask: boolean = false;
   isAdd: boolean = false;
+  token: string="";
+  user: User =new User;
   @ViewChild('dt') dt: any;
+  
 
 
   constructor(private taskService: taskService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private stateService: stateService) {
-    // this.taskList = [{
-    //   Id: '1',
-    //   TaskName: "Tarea 1",
-    //   TaskDescription: 'Realizar tarea 1',
-    //   Status: 'Pendiente'
-    // }, {
-    //   Id: '2',
-    //   TaskName: "Tarea 2",
-    //   TaskDescription: 'Realizar tarea 2',
-    //   Status: 'En progreso'
-    // }, {
-    //   Id: '3',
-    //   TaskName: "Tarea 3",
-    //   TaskDescription: 'Realizar tarea 3',
-    //   Status: 'Completado'
-    // }];
-
     this.taskModel = new TaskModel();
   }
 
-  ngOnInit(): void {
-    this.getTaskList();
+  ngOnInit(): void {   
+     this.GetToken(this.user);    
   }
 
-  getTaskList = () => {
-    this.taskService.getTaskList().subscribe((response: RequestResultModel<TaskModel[]>) => {
+  
+  
+  GetToken= (user: User) => {
+    
+    this.taskService.getToken(user).subscribe((response: Token) => {
+
+      if (!response) return;
+
+      this.token =response.token;
+
+      this.getTaskList(this.token)
+    });
+  }
+
+  getTaskList = (token:string) => {
+    this.taskService.getTaskList(token).subscribe((response: RequestResultModel<TaskModel[]>) => {
+
       this.taskList = (response.result || []);
     });
   }
@@ -92,7 +93,7 @@ export class TaskListComponent implements OnInit {
   }
 
   deleteTask = (task: TaskModel) => {
-    this.taskService.deleteTask(task).subscribe((response: RequestResultModel<TaskModel>) => {
+    this.taskService.deleteTask(task,this.token ).subscribe((response: RequestResultModel<TaskModel>) => {
       if (!response) return;
 
       const state = new StateModel();
@@ -102,7 +103,7 @@ export class TaskListComponent implements OnInit {
 
       this.stateService.deleteData(state);
 
-      this.getTaskList();
+      this.getTaskList(this.token);
 
       this.messageService.add({
         severity: response.isSuccessful ? 'success' : 'error',
@@ -116,7 +117,7 @@ export class TaskListComponent implements OnInit {
   hideDialog = (event: ResponseModelTask) => {
     if (event == null) return;
 
-    this.getTaskList();
+    this.getTaskList(this.token);
     this.openDialog = (event.openDialog || false);
   }
 
@@ -136,7 +137,6 @@ export class TaskListComponent implements OnInit {
   }
 
   applyFilterGlobal = ($event: any, stringVal: string) => {
-    debugger;
 
     const obj = this.dt.filter(($event.target as HTMLInputElement).value, 'dev', stringVal);
     return obj;

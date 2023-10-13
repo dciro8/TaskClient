@@ -1,15 +1,15 @@
 <p-dialog [visible]="openDialog" [style]="{ height:'600px', width: '600px'  }" header="Tareas" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <div style="display: grid; gap: 10px; padding: 20px;">
+            <span >Título</span>
             <div class="inputbox">
-                <input type="text" pInputText maxlength="20" id="taskName" [(ngModel)]="taskModel.title" required autofocus />
-                <span >Título</span>
+                <input type="text" pInputText maxlength="20" id="taskName" [(ngModel)]="taskModel.title" required autofocus [disabled]="isEdit"/>
+                
             </div>
             
             <div class="inputbox">
-                <input type="text" maxlength="20"  pInputText id="developer" [(ngModel)]="taskModel.developer" [disabled]="isEdit"
-                    required autofocus />
-                <span *ngIf="isAdd">Desarrollador</span>
+                <input type="text" maxlength="20"  pInputText id="developer" [(ngModel)]="taskModel.developer" required autofocus />
+                <span>Desarrollador</span>
             </div>
             <div class="inputbox">
                 <input type="text" maxlength="100" pInputText id="taskDescription" [(ngModel)]="taskModel.description" required
