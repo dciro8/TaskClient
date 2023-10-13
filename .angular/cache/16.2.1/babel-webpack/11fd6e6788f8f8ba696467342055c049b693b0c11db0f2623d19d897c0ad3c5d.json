@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var ActionsEnum;\n(function (ActionsEnum) {\n  ActionsEnum[\"INSERT\"] = \"insert\";\n  ActionsEnum[\"UPDATE\"] = \"update\";\n  ActionsEnum[\"DELETE\"] = \"delete\";\n})(ActionsEnum || (ActionsEnum = {}));","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
